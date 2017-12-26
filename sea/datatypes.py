@@ -13,7 +13,7 @@ class ImmutableDict(dict):
         return cls(zip(keys, repeat(value)))
 
     def __reduce_ex__(self, protocol):
-        return type(self), (dict(self),)
+        return type(self), (dict(self), )
 
     def __hash__(self):
         if self._hash_cache is not None:
@@ -60,9 +60,11 @@ class ImmutableDict(dict):
 
 
 class ConstantsObject(ImmutableDict):
-
     def __getattr__(self, name):
         return self[name]
 
     def __dir__(self):
         return self.keys()
+
+    def __setattr__(self, key, value):
+        is_immutable(self)
